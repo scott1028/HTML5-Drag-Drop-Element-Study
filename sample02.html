@@ -5,9 +5,9 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
 </head>
 <body>
-    <div ondragstart="drag(event)" draggable="true" style="background-color: silver;">1</div>
-    <div ondragstart="drag(event)" draggable="true" style="background-color: red;">2</div>
-    <div ondragstart="drag(event)" draggable="true" style="background-color: blue;">3</div>
+    <div ondragstart="drag(event)" ondragend="dragend(event);" draggable="true" style="background-color: silver;">1</div>
+    <div ondragstart="drag(event)" ondragend="dragend(event);" draggable="true" style="background-color: red;">2</div>
+    <div ondragstart="drag(event)" ondragend="dragend(event);" draggable="true" style="background-color: blue;">3</div>
     <hr />
     <div ondrop="drop(event)" ondragover="allowDrop(event)" style="width: 100px; height: 100px; border: 1px solid #333;"></div>
     <script>
@@ -15,7 +15,6 @@
             e.preventDefault();
         }
 
-        var currentElement = null
 
         function drag(e) {
             currentElement = e.target;
@@ -24,6 +23,11 @@
         function drop(e) {
             e.preventDefault();
             e.target.appendChild(currentElement);
+        }
+
+        // 標記 flag ElementNode
+        var currentElement = null
+        function dragend(e){
             currentElement = null;
         }
     </script>
