@@ -1,6 +1,7 @@
 # HTML 拖曳教學範例
 
 - dataTransfer 似乎不能放 Instance or Element Node。可能考慮設定一個 Global/Scope 變數來放！
+- drag/drop Event doc ref: https://developer.mozilla.org/zh-TW/docs/Web/Guide/HTML/Drag_and_drop
 
 ~~~
 var dragSrcEl = null;
