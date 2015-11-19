@@ -14,10 +14,12 @@ b.可以被放置的Node
 a must be draggable="true"
 a is ondragstart
 b is ondragenter
-b is ondragover
+b is ondragover (滑鼠移動連續且持續觸發！)
 b is ondragleave
-b is ondrop (當滑鼠放開的時候必須在可以 drop 並且有間聽的Node物件上才會觸發！)
+b is ondrop (當滑鼠放開的時候必須在可以 drop 並且有間聽的Node物件上才會觸發！必須下 e.preventDefault() 關閉預設行為！)
 a is ondragend (緊接著 ondrop 後觸發)
+
+* 補充：HTML Element Node 是可以堆疊的有時候事件的觸發 e.target 會是該 Node 的 Child！
 ~~~
 
 ~~~
