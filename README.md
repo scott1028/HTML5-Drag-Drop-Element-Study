@@ -3,6 +3,23 @@
 - dataTransfer 似乎不能放 Instance or Element Node。可能考慮設定一個 Global/Scope 變數來放！
 - drag/drop Event doc ref: https://developer.mozilla.org/zh-TW/docs/Web/Guide/HTML/Drag_and_drop
 
+# 拖曳物件目前已知的事件觸發流程
+
+- 觸發標的會 a, b 交錯！ ex: sample04.html
+
+~~~
+a.被拖曳物件的Node
+b.可以被放置的Node
+
+a must be draggable="true"
+a is ondragstart
+b is ondragenter
+b is ondragover
+b is ondragleave
+b is ondrop (當滑鼠放開的時候必須在可以 drop 並且有間聽的Node物件上才會觸發！)
+a is ondragend (緊接著 ondrop 後觸發)
+~~~
+
 ~~~
 var dragSrcEl = null;
 
