@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Base on sample03 增加實作預先佔位顯示</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
+</head>
+<body>
+    <div
+        class="draggable-item"
+        ondragstart="dragstart(event)"
+        ondragend="dragend(event);"
+        draggable="true"
+        style="line-height: 40px; height: 40px; background-color: silver; box-sizing: border-box;">1</div>
+    <div
+        class="draggable-item"
+        ondragstart="dragstart(event)"
+        ondragend="dragend(event);"
+        draggable="true"
+        style="line-height: 40px; height: 40px; background-color: red; box-sizing: border-box;">2</div>
+    <div
+        class="draggable-item"
+        ondragstart="dragstart(event)"
+        ondragend="dragend(event);"
+        draggable="true"
+        style="line-height: 40px; height: 40px; background-color: blue; box-sizing: border-box;">3</div>
+    <hr />
+    <div
+        class="drop-zone"
+        ondragover="dragover(event)"
+        ondragenter="dragenter(event)"
+        ondragleave="dragleave(event)"
+        ondrop="drop(event)"
+        ondragover="allowDrop(event)"
+        style="width: 200px; height: 200px; border: 1px solid #333;"></div>
+    <script>
+        var dropZoneOriginBackgroundColor = null;
+
+        // handle elementNode drag/drop
+        (function(scope){
+            var currentElement = null
+
+            scope.dragstart = function(e) {
+                currentElement = e.target;
+                currentElement.style.border = "2px dotted black"
+            }
+
+            scope.dragend = function(e){
+                currentElement.style.border = ""
+                currentElement = null;
+
+                //
+                // document.querySelector('.holder') ? document.querySelector('.holder').remove() : null;
+                document.querySelector('.holder') ? document.querySelector('.holder').hidden = true : null;
+            }
+
+            scope.drop = function(e) {
+                e.preventDefault();
+                if(e.target.className === 'drop-zone') {
+                    e.target.appendChild(currentElement);
+                    e.target.style.backgroundColor = dropZoneOriginBackgroundColor;
+                };
+            }
+        })(window);
+
+
+        // handle drag/drop effect.
+        (function(scope){
+            scope.dragenter = function(e) {
+                console.log('Drag Enter');
+
+                if(e.target.className === 'drop-zone') {  // To avoid repace color of the dropItem.
+                    dropZoneOriginBackgroundColor = e.target.style.backgroundColor;
+                    e.target.style.backgroundColor = "lightblue";
+
+
+                    // create 預先佔位物件
+                    var spaceItem = document.querySelector('.holder') || document.createElement('div');
+                    spaceItem.className = 'holder'
+                    spaceItem.style.height = "40px"
+                    spaceItem.textContent = '';
+                    spaceItem.style.backgroundColor = 'yellow';
+                    document.querySelector('.drop-zone').appendChild(spaceItem);
+                }
+                else if(e.target.className === 'holder') {
+
+                }
+                else if(e.target.className === 'draggable-item') {
+                    // create 預先佔位物件
+                    var droppedItem = e.target;
+                    var spaceItem = document.querySelector('.holder') || document.createElement('div');
+                    spaceItem.className = 'holder'
+                    spaceItem.style.height = "40px"
+                    spaceItem.textContent = '';
+                    spaceItem.style.backgroundColor = 'yellow';
+                    document.querySelector('.drop-zone').insertBefore(spaceItem, droppedItem);
+                }
+            };
+
+            scope.dragleave = function(e) {
+                console.log('Drag Leave');
+                if(e.target.className === 'drop-zone') {  // To avoid repace color of the dropItem.
+                    e.target.style.backgroundColor = dropZoneOriginBackgroundColor;
+                    dropZoneOriginBackgroundColor = null;
+                }
+            };
+
+            scope.dragover = function(e){
+                e.preventDefault();  // This config is allow element to be drop!
+
+                console.log('Drag Over and Moving!');
+            };
+        })(window);
+    </script>
+</body>
+</html>

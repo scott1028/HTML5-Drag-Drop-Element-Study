@@ -5,21 +5,26 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
 </head>
 <body>
-    <div ondragstart="drag(event)" ondragend="dragend(event);" draggable="true" style="background-color: silver;">1</div>
-    <div ondragstart="drag(event)" ondragend="dragend(event);" draggable="true" style="background-color: red;">2</div>
-    <div ondragstart="drag(event)" ondragend="dragend(event);" draggable="true" style="background-color: blue;">3</div>
+    <div ondragstart="dragstart(event)" ondragend="dragend(event);" draggable="true" style="line-height: 40px; height: 40px; background-color: silver; box-sizing: border-box;">1</div>
+    <div ondragstart="dragstart(event)" ondragend="dragend(event);" draggable="true" style="line-height: 40px; height: 40px; background-color: red; box-sizing: border-box;">2</div>
+    <div ondragstart="dragstart(event)" ondragend="dragend(event);" draggable="true" style="line-height: 40px; height: 40px; background-color: blue; box-sizing: border-box;">3</div>
     <hr />
-    <div class="drop-zone" ondragover="dragover(event)" ondragenter="dragenter(event)" ondragleave="dragleave(event)"  ondrop="drop(event)" ondragover="allowDrop(event)" style="width: 100px; height: 100px; border: 1px solid #333;"></div>
+    <div class="drop-zone" ondragover="dragover(event)" ondragenter="dragenter(event)" ondragleave="dragleave(event)"  ondrop="drop(event)" ondragover="allowDrop(event)" style="width: 200px; height: 200px; border: 1px solid #333;"></div>
     <script>
         var dropZoneOriginBackgroundColor = null;
 
         // handle elementNode drag/drop
         (function(scope){
-            // set flag
-            scope.currentElement = null
+            var currentElement = null
 
-            scope.drag = function(e) {
+            scope.dragstart = function(e) {
                 currentElement = e.target;
+                currentElement.style.border = "2px dotted black"
+            }
+
+            scope.dragend = function(e){
+                currentElement.style.border = ""
+                currentElement = null;
             }
 
             scope.drop = function(e) {
@@ -28,10 +33,6 @@
                     e.target.appendChild(currentElement);
                     e.target.style.backgroundColor = dropZoneOriginBackgroundColor;
                 };
-            }
-
-            scope.dragend = function(e){
-                currentElement = null;
             }
         })(window);
 
