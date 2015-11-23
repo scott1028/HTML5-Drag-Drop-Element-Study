@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Pseudo Element Style</title>
+</head>
+<body>
+<div>
+    ref: https://css-tricks.com/pseudo-element-roundup/
+</div>
+<br />
+<div style="margin-left: 100px; margin-right: 100px;">
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <div>4</div>
+    <div>
+        5
+        <div style="margin-left: 1em;">
+            6
+            <div style="margin-left: 1em;">
+                7
+                <div style="margin-left: 1em;">8</div>
+                <div style="margin-left: 1em;">9</div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    div div {
+        /* make pseudo anchor by container node */
+        position: relative;
+        margin: 0px;
+    }
+
+    div div:before {
+        content: '';  /* 必須放置一個空的 Content */
+
+        /* 必須放置一個空的 Content */
+        top: -0.6em;
+        left: -1.5em;
+
+        /* bottom-line */
+        border-bottom: 1px solid red;
+        position: absolute;  /* 必須使用 absolute 才可以讓 pseudo element line 正常顯示 */
+        width: 1em;
+
+        /* left-line */
+        border-left: 1px solid red;
+        height: 1.1em;  /* 讓線條可以垂直覆蓋到讓看起來像是樹狀圖的線條 */
+    }
+</style>
+</body>
+</html>
