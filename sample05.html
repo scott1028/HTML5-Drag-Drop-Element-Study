@@ -24,6 +24,18 @@
                     <li>9</li>
                 </ol>
             </li>
+            <li>0</li>
+            <li>7</li>
+            <li>7</li>
+            <li>
+                a
+                <ol>
+                    <li>7</li>
+                    <li>8</li>
+                    <li>9</li>
+                </ol>
+            </li>
+            <li>9</li>
         </ol>
     </li>
 </ul>
@@ -37,7 +49,7 @@
     }
 
     /*
-     * 設定 Position 讓每一個 Pesudo 的 Anchor 都設定在本身附著的 Element Node 上！
+     * 1. 設定 Position 讓每一個 Pesudo 的 Anchor 都設定在本身附著的 Element Node 上！
      */
     ul li {
         position: relative;
@@ -45,8 +57,8 @@
     }
 
     /*
-     * 讓左側的 Pesudo Element 高度不足造成斷線，在利用 After Pesudo 覆蓋將線段連上！
-     * 或是你可以直接讓 Before Pesudo Element Left Border Line 高度為 0！
+     * 1. 讓左側的 Pesudo Element 高度不足造成斷線，在利用 After Pesudo 覆蓋將線段連上！
+     * 2. 或是你可以直接讓 Before Pesudo Element Left Border Line 高度為 0！
      */
     ul li:before {
         content: '';  /* 必須放置一個空的 Content */
@@ -67,7 +79,8 @@
 
 
     /*
-     * 左側垂直的 Border-Line 樣式與位置！
+     * 1. 左側垂直的 Border-Line 樣式與位置！
+     * 2. 設定高度為整個 Content 的高度 使他畫出垂直的左側邊界紅線！
      */
     ul li:after {
         content: '';
@@ -77,15 +90,23 @@
         left: -2.25em;
 
         border-left: 1px solid red;
-        height: 1.1em;
+        height: 100%;
     }
 
     /*
-     * 由於 li 第一個物件 垂直線段會跟物件字樣重疊所以再 Override 一次 Pesudo Element 樣式讓他吻合！
+     * 1. 此時 li 第一個物件左側 After Pesudo Element Border Line 會覆蓋到字樣所以要在複寫一次樣式！
+     *    只要把他 Position 往下一點就可！
      */
     ul li:first-child:after {
         top: 0.0em;
-        height: 0.5em;
+    }
+
+    /*
+     * 最後一個物件不須要把左側紅線畫完所以複寫他的 Pesudo Element 樣式讓他吻合！
+     */
+    ul li:last-child:after {
+        top: -0.6em;
+        height: 1.1em;
     }
 </style>
 </body>
