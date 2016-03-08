@@ -52,3 +52,7 @@ function handleDrop(e) {
   return false;
 }
 ~~~
+
+# AngularJs ngModel Interactive Sample
+
+![Alt text](https://raw.githubusercontent.com/scott1028/HTML5-Drag-Drop-Element-Study/master/sample06.gif "Sample06")
