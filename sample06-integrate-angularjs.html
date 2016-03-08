@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AngularJS 互動</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+</head>
+<body ng-app="sample01" ng-controller="base">
+    <pre>ref: http://codef0rmer.github.io/angular-dragdrop/#/</pre>
+    <pre>
+        {{ top }}
+    </pre>
+    <pre>
+        {{ bottom }}
+    </pre>
+    <div
+        pool-model="top"
+        ondrop="self.drop(event)" ondragover="self.dragover(event)"
+        style="width: 200px; height: 200px; border: 1px solid #333;">
+        <div
+            class="draggable-item"
+            pool-model="top"
+            ondrop="function(){console.log(1321);}"
+            ng-repeat="item in top" ng-model="item"
+            ondragstart="self.dragstart(event)" ondragend="self.dragend(event);" ondrop="self.drop(event)" draggable="true"
+            style="line-height: 40px; height: 40px; background-color: silver; box-sizing: border-box;">{{ item.val }}</div>
+    </div>
+    <div
+        pool-model="bottom"
+        ondrop="self.drop(event)" ondragover="self.dragover(event)"
+        style="width: 200px; height: 200px; border: 1px solid #333;">
+        <div
+            class="draggable-item"
+            pool-model="bottom"
+            ng-repeat="item in bottom" ng-model="item"
+            ondragstart="self.dragstart(event)" ondragend="self.dragend(event);" ondrop="self.drop(event)" draggable="true"
+            style="line-height: 40px; height: 40px; background-color: silver; box-sizing: border-box;">{{ item.val }}</div>
+    </div>
+    <script>
+        // handle elementNode drag/drop
+        // (function(scope){
+        //     var currentElement = null
+
+        //     // from-to ngModel Stores
+        //     var srcPool = null;
+        //     var destPool = null;
+        //     var srcScope = null;
+        //     var destScope = null;
+
+        //     // current Scope ngModel Item
+        //     var scopeItem = null;
+
+        //     scope.dragstart = function(e) {
+        //         console.debug(e, 'dragstart!');
+                
+        //         //
+        //         scopeItem = null;
+        //         srcScope = $(e.target).scope();
+        //         srcPool = srcScope.$eval(e.target.parentElement.attributes['ng-model'].value);
+
+        //         //
+        //         currentElement = e.target;
+        //         currentElement.style.border = "2px dotted black"
+        //     };
+
+        //     // 最後才觸發(After drop)
+        //     scope.dragend = function(e){
+        //         // debugger;
+        //         console.debug(e, 'dragend');
+        //         currentElement.style.border = ""
+        //         scopeItem = srcScope.$eval(currentElement.attributes['ng-model'].value);
+
+
+        //         // update two dataPool
+        //         srcPool = srcPool.filter(function(row){ return row.$$hashKey !== scopeItem.$$hashKey; });
+
+        //         if(destPool.filter(function(row){ return row.$$hashKey === scopeItem.$$hashKey; }).length === 0){
+        //             destPool.push(scopeItem);
+        //         };
+
+                
+        //         // getter/setter for top pool
+        //         var getterForTop = srcScope.$parse('top');
+        //         var setterForTop = getterForTop.assign;
+        //         setterForTop(srcScope.$parent, srcPool);
+        //         srcScope.$apply();
+
+
+        //         // getter/setter for bottom pool
+        //         var getterForBottom = destScope.$parse('bottom');
+        //         var setterForBottom = getterForBottom.assign;
+        //         setterForBottom(destScope.$parse, destScope);
+                
+
+        //         // reset scopeItem
+        //         srcPool = null;
+        //         scopeItem = null;
+        //         currentElement = null;
+        //     };
+
+
+        //     // (Before DragEnd)
+        //     // To do Reset all flag
+        //     // 看來 drop 的事件觸發在 dragend 之前！
+        //     scope.drop = function(e) {
+        //         console.debug(e, 'drop!');
+        //         e.preventDefault();
+
+        //         // set drop ngModel pointer
+        //         destScope = $(e.target).scope();
+        //         destPool = destScope.$eval(e.target.attributes['ng-model'].value);
+        //     };
+        // })(window);
+
+
+        // handle drag/drop effect.
+        // (function(scope){
+        //     scope.dragenter = function(e) {
+        //         console.log('Drag Enter');
+        //     };
+
+        //     scope.dragleave = function(e) {
+        //         console.log('Drag Leave', e.target);
+        //     };
+
+        //     scope.dragover = function(e){
+        //         e.preventDefault();  // This config is allow element to be drop!
+        //         console.log('Drag Over and Moving!');
+        //     };
+        // })(window);
+    </script>
+    <script>
+        var app = angular.module('sample01', []);
+        app.controller('base', function($scope, $http, $location, $http, $parse){
+            console.info("base init!");
+
+            // set a pointer for $parse;
+            $scope.$parse = $parse;
+
+            $scope.top = [
+                { val: 1 },
+                { val: 6 },
+                { val: 9 },
+            ];
+            $scope.bottom = [
+                { val: 7 }
+            ];
+
+            
+            // disabled default behavior
+            $scope.dragover = function(e){
+                e.preventDefault();  // This config is allow element to be drop!
+            };
+            // trigged at first
+            $scope.dragstart = function(e) {
+                // e.preventDefault();  // 關閉物件就不能拖曳了
+                console.debug(e, 'dragstart!');
+                var getter = $parse(e.target.attributes['pool-model'].value);
+                var setter = getter.assign;
+
+                //
+                var srcPool = getter($scope);
+
+                e.dataTransfer.setData('key', $(e.target).scope().item.$$hashKey);
+                e.dataTransfer.setData('src', e.target.attributes['pool-model'].value);
+            };
+            //
+            $scope.drop = function(e) {
+                console.debug(e, 'drop!');
+                e.preventDefault();
+                var destGetter = $parse(e.target.attributes['pool-model'].value);
+                var destSetter = destGetter.assign;
+
+                //
+                var srcGetter = $parse(e.dataTransfer.getData('src'));
+                var srcSetter = srcGetter.assign;
+                srcGetter($scope);
+
+                //
+                var movingItem;
+                var newSrcModel = srcGetter($scope).filter(function(row){
+                    if(row.$$hashKey === e.dataTransfer.getData('key')){
+                        movingItem = row;
+                        return false;
+                    }
+                    else{
+                        return true;
+                    };
+                });
+
+                // To avoid undefined Object injection.
+                if(!movingItem) return;
+
+                //
+                srcSetter($scope, newSrcModel);
+                var newSrcModel = destGetter($scope);
+                newSrcModel.push(movingItem);
+                destSetter($scope, newSrcModel);
+
+                //
+                $scope.$apply();
+            };
+            // trigged finally
+            $scope.dragend = function(e){
+                console.debug(e, 'dragend');
+            };
+            window.self = $scope;
+        });
+    </script>
+</body>
+</html>
